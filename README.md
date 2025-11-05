@@ -1,9 +1,10 @@
-skill-assesment1
+## SA -1 
 Write an assembly language program in 8086 to count the number of even and odd numbers in an array of 10 elements and display the counts.
-Aim
-To write an assembly language program in 8086 to count the number of even and odd numbers in an array of 10 elements and display the counts.
+---
+## Aim
+-To write an assembly language program in 8086 to count the number of even and odd numbers in an array of 10 elements and display the counts.
 
-Algorithm
+## Algorithm
 Step 1: Start
 Initialize the data segment and code segment.
 
@@ -48,44 +49,43 @@ Display the final values of EVEN_COUNT and ODD_COUNT using INT 21H (DOS interrup
 Step 8: Stop
 End the program using INT 21H (Function 4CH).
 
-PROGRAM:
-DATA SEGMENT
-    ARR DB 07,08,05,04
+## PROGRAM:
+```
+.MODEL SMALL
+.STACK 100H
+
+.DATA
+    ARR DB 07,08,05,04,09,12,15,20,33,44
     EVEN_COUNT DB 0
     ODD_COUNT  DB 0
     MSG1 DB 13,10,'Number of Even Numbers = $'
     MSG2 DB 13,10,'Number of Odd Numbers  = $'
-DATA ENDS
 
-CODE SEGMENT
-ASSUME DS:DATA, CS:CODE
-
-START:
-    MOV AX, DATA
+.CODE
+MAIN PROC
+    MOV AX, @DATA
     MOV DS, AX
 
     MOV SI, OFFSET ARR
-    MOV CX, 10
+    MOV CX, 10            ; 10 elements
 
 NEXT_NUM:
-    MOV AL, [SI]
-    MOV BL, AL
-    AND BL, 01H
-    CMP BL, 00H
-    JZ EVEN_LABEL
-
-ODD_LABEL:
-    INC ODD_COUNT
-    JMP CONTINUE
+    MOV AL, [SI]          ; value
+    TEST AL, 1            ; check LSB
+    JNZ ODD_LABEL         ; if 1 → odd
 
 EVEN_LABEL:
     INC EVEN_COUNT
+    JMP CONTINUE
+
+ODD_LABEL:
+    INC ODD_COUNT
 
 CONTINUE:
     INC SI
     LOOP NEXT_NUM
 
-    ; ----- Display results -----
+    ; ----- Display Even -----
     MOV AH, 09H
     LEA DX, MSG1
     INT 21H
@@ -93,6 +93,7 @@ CONTINUE:
     MOV AL, EVEN_COUNT
     CALL DISP_NUM
 
+    ; ----- Display Odd -----
     MOV AH, 09H
     LEA DX, MSG2
     INT 21H
@@ -102,6 +103,7 @@ CONTINUE:
 
     MOV AH, 4CH
     INT 21H
+MAIN ENDP
 
 ; ===== Subroutine to display number in AL =====
 DISP_NUM PROC
@@ -112,12 +114,13 @@ DISP_NUM PROC
     RET
 DISP_NUM ENDP
 
-CODE ENDS
 END 
-output:
+```
 
-<img width="642" height="433" alt="Screenshot 2025-11-05 094822" src="https://github.com/user-attachments/assets/a81efc2c-7a6e-46ae-91d3-4035e9bc71e0" />
+## output:
+<img width="642" height="432" alt="image" src="https://github.com/user-attachments/assets/5681ae65-2b9a-4bf2-b465-f6e66743f79e" />
 
 
-Result:
+
+## Result:
 Hence the assembly language program in 8086 to count the number of even and odd numbers in an array of 10 elements and display the counts were verified.
